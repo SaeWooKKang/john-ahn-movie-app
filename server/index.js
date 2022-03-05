@@ -13,18 +13,14 @@ app.use(express.urlencoded({extended: true})); // body-parser 가 express에 내
 app.use(express.json());
 app.use(cookieParser());
 
+app.use('/api/favorite', require('./routes/favorite'));
+
 const {User} = require('./models/User.js');
 
 const mongoose = require('mongoose');
 
-mongoose.connect(config.mongoURI
-  // {
-    // useNewUrlParser: true,
-    // useUnifiedTopology: true,
-    // userCreateIndex: true,
-    //  useFindAndModify: false
-  // }
-).then(() => console.log('MongoDb Connected...'))
+mongoose.connect(config.mongoURI)
+  .then(() => console.log('MongoDb Connected...'))
   .catch(err => console.log(err));
 
 app.get('/', (req, res) => res.send('Hello World!'));

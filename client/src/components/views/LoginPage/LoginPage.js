@@ -4,7 +4,13 @@ import { loginUser } from '../../../_actions/user_action';
 import { useNavigate} from 'react-router-dom';
 import Auth from '../../../hoc/auth';
 
-const LoginPage = () => {
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+import {Form, Icon, Input, Button, Checkbox, Typography} from 'antd';
+
+const { Title } = Typography;
+
+const LoginPage = (props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

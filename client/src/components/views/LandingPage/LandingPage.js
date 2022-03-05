@@ -3,26 +3,39 @@ import  { API_URL, API_KEY, IMAGE_BASE_URL } from '../../Config';
 import MainImage from './sections/MainImage';
 import GridCards  from '../commons/GridCards';
 import { Row } from 'antd';
+
 const LandingPage = () => {
 
   const [Movies, setMovies] = useState([]);
   const [MainMovieImage, setMainMovieImage] = useState(null);
+  const [currentPage, setCurrentPage] = useState(0);
 
   useEffect(() => {
     const endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=en-US&page=1`;
 
+    fetchMovis(endpoint);
+   
+  }, []);
+
+  const fetchMovis = endpoint => {
     // HTTP 요청 
     fetch(endpoint)
       .then(response => response.json())
       .then(response => {
-        
+
         // 받은 데이터 state에 저장
-        setMovies([response.results]);
+        setMovies([...Movies, ...response.results]);
         setMainMovieImage(response.results[0]);
-        console.log('Movies: ', response.results);
+        setCurrentPage(response.page);
       });
-  }, []);
-  
+  };
+
+  const loadMoreItems = () => {
+    const endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=en-US&page=${currentPage + 1}`;
+
+    fetchMovis(endpoint);
+  };
+
   return (
     <div style={{ width: '100%', margin: '0'}}>
 
@@ -41,11 +54,11 @@ const LandingPage = () => {
         <hr />
 
         {/* Movie Grid Cards */}
-
         <Row gutter={[16, 16]}>
           {Movies && Movies.map((movie, index) => (
             <React.Fragment key={index}>
               <GridCards 
+                LandingPage={true}
                 image={movie.poster_path 
                   ? `${IMAGE_BASE_URL}w500${movie.poster_path}` 
                   : null}
@@ -54,13 +67,14 @@ const LandingPage = () => {
               />
             </React.Fragment>
           ))}
-          
         </Row>
       </div>
-      
+
+      {/* Load button */}
       <div style={{ display: 'flex', justifyContent:'center' }}>
-        <button>Load More</button>
+        <button onClick={loadMoreItems}>Load More</button>
       </div>
+
     </div>
   );
 };
