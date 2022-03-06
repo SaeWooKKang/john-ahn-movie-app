@@ -27,6 +27,7 @@ const LandingPage = () => {
         setMovies([...Movies, ...response.results]);
         setMainMovieImage(response.results[0]);
         setCurrentPage(response.page);
+        console.log(response.results[0]);
       });
   };
 
